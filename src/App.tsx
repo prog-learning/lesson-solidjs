@@ -1,25 +1,29 @@
-import type { Component } from 'solid-js';
+import { Component, createSignal } from 'solid-js';
 
-import logo from './logo.svg';
 import styles from './App.module.css';
+import { CountUp } from './CountUp';
+import { HelloWorld } from './HelloWorld';
+
+export const [count, setCount] = createSignal(0);
+setCount(count() + 1);
+console.log(count());
 
 const App: Component = () => {
+  const message = 'messageだよ';
+
   return (
     <div class={styles.App}>
-      <header class={styles.header}>
-        <img src={logo} class={styles.logo} alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          class={styles.link}
-          href="https://github.com/solidjs/solid"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Solid
-        </a>
-      </header>
+      <HelloWorld text='テキスト' />
+      <div style='color:tomato;font-size:32px;font-weight:bold;'>
+        style 文字列で
+      </div>
+      <div
+        style={{ color: 'tomato', 'font-size': '32px', 'font-weight': 'bold' }}
+      >
+        style objectで
+      </div>
+      <div>埋め込み→{message}</div>
+      <CountUp />
     </div>
   );
 };
