@@ -1,29 +1,62 @@
-import { Component, createSignal } from 'solid-js';
+import { Component, createEffect, createSignal, For, Show } from 'solid-js';
+import { Dynamic } from 'solid-js/web';
 
 import styles from './App.module.css';
-import { CountUp } from './CountUp';
-import { HelloWorld } from './HelloWorld';
-
-export const [count, setCount] = createSignal(0);
-setCount(count() + 1);
-console.log(count());
+import { Children } from './lessons/Children';
+import { ClassList } from './lessons/ClassList';
+import { CreateMemo } from './lessons/CreateMemo';
+import { CreateSignal } from './lessons/CreateSignal';
+import { ErrorCatch } from './lessons/ErrorCatch';
+import { ForAndIndex } from './lessons/ForAndIndex';
+import { HelloWorld } from './lessons/HelloWorld';
+import { Lifecycle } from './lessons/Lifecycle';
+import { SplitProps } from './lessons/SplitProps';
 
 const App: Component = () => {
-  const message = 'messageだよ';
+  const [current, setCurrent] = createSignal<MenuKeys>('create-signal');
+  createEffect(() => {
+    console.log('Do createEffect');
+  });
+
+  const menus = {
+    'create-signal': CreateSignal,
+    'create-memo': CreateMemo,
+    'for-and-index': ForAndIndex,
+    'error-boundary': ErrorCatch,
+    lifecycle: Lifecycle,
+    'class-list': ClassList,
+    'split-props': SplitProps,
+    children: Children,
+  };
+  type MenuKeys = keyof typeof menus;
 
   return (
     <div class={styles.App}>
-      <HelloWorld text='テキスト' />
-      <div style='color:tomato;font-size:32px;font-weight:bold;'>
-        style 文字列で
+      <HelloWorld text='World!!' />
+      <h2>Inline Style 2パターン</h2>
+      <div style='color:tomato;font-size:20px;font-weight:bold;'>
+        style='color:tomato;font-size:20px;font-weight:bold;'
       </div>
       <div
-        style={{ color: 'tomato', 'font-size': '32px', 'font-weight': 'bold' }}
+        style={{ color: 'skyblue', 'font-size': '20px', 'font-weight': 'bold' }}
       >
-        style objectで
+        {
+          "style={{ color: 'skyblue', 'font-size': '20px', 'font-weight': 'bold' }}"
+        }
       </div>
-      <div>埋め込み→{message}</div>
-      <CountUp />
+
+      <For each={Object.keys(menus)}>
+        {(key) => (
+          <button
+            onClick={() => setCurrent(key as MenuKeys)}
+            style={{ margin: '0 5px' }}
+          >
+            {key}
+          </button>
+        )}
+      </For>
+
+      <Dynamic component={menus[current()]} />
     </div>
   );
 };
